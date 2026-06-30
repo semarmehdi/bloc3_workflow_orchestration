@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 380" width="860" height="380" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" fill="none" stroke="#555555" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect x="0" y="0" width="860" height="380" fill="#ffffff"/>
+<text x="430.0" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a1a">Bloc 3 — Architecture d&#x27;orchestration (Airflow)</text>
+<path d="M 235 83 L 285 83 L 285 195 L 335 195" fill="none" stroke="#555555" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="251" y="130" width="68" height="16" rx="3" fill="#ffffff" stroke="#dddddd" stroke-width="0.7"/>
+<text x="285" y="139" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#333333">1. extract</text>
+<path d="M 235 195 L 285 195 L 285 195 L 335 195" fill="none" stroke="#555555" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="236" y="186" width="98" height="16" rx="3" fill="#ffffff" stroke="#dddddd" stroke-width="0.7"/>
+<text x="285" y="195" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#333333">2. modèle (pkl)</text>
+<path d="M 128 290 L 128 258 L 128 258 L 128 225" fill="none" stroke="#555555" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="100" y="248" width="56" height="16" rx="3" fill="#ffffff" stroke="#dddddd" stroke-width="0.7"/>
+<text x="128" y="258" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#333333">register</text>
+<path d="M 525 195 L 575 195 L 575 85 L 625 85" fill="none" stroke="#555555" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="523" y="131" width="104" height="16" rx="3" fill="#ffffff" stroke="#dddddd" stroke-width="0.7"/>
+<text x="575" y="140" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#333333">2. scoring (api)</text>
+<path d="M 525 195 L 575 195 L 575 203 L 625 203" fill="none" stroke="#555555" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="550" y="190" width="50" height="16" rx="3" fill="#ffffff" stroke="#dddddd" stroke-width="0.7"/>
+<text x="575" y="199" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#333333">3. load</text>
+<path d="M 525 195 L 575 195 L 575 320 L 625 320" fill="none" stroke="#555555" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="544" y="248" width="62" height="16" rx="3" fill="#ffffff" stroke="#dddddd" stroke-width="0.7"/>
+<text x="575" y="258" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#333333">4. notify</text>
+<path d="M 430 260 L 430 280 L 430 280 L 430 300" fill="none" stroke="#555555" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="384" y="271" width="92" height="16" rx="3" fill="#ffffff" stroke="#dddddd" stroke-width="0.7"/>
+<text x="430" y="280" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#333333">backup + préd.</text>
+<path d="M 235 195 L 285 44 L 730 44 L 732 55" fill="none" stroke="#555555" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+<rect x="468" y="35" width="80" height="16" rx="3" fill="#ffffff" stroke="#dddddd" stroke-width="0.7"/>
+<text x="508" y="44" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#333333">modèle servi</text>
+<rect x="20" y="55" width="215" height="56" rx="8" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5"/>
+<text x="127.5" y="75.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1a1a1a">API de données</text>
+<text x="127.5" y="91.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#444444">GET /current-transactions</text>
+<rect x="20" y="165" width="215" height="60" rx="8" fill="#f5f5f5" stroke="#666666" stroke-width="1.5"/>
+<text x="127.5" y="187.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1a1a1a">Serveur MLflow</text>
+<text x="127.5" y="203.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#444444">backend Postgres · S3</text>
+<rect x="20" y="290" width="215" height="60" rx="8" fill="#ffe6cc" stroke="#d79b00" stroke-width="1.5"/>
+<text x="127.5" y="312.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1a1a1a">train/train.py</text>
+<text x="127.5" y="328.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#444444">RF · XGBoost + SMOTE</text>
+<rect x="335" y="130" width="190" height="130" rx="8" fill="#e1d5e7" stroke="#9673a6" stroke-width="1.5"/>
+<text x="430.0" y="171.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1a1a1a">Apache Airflow</text>
+<text x="430.0" y="187.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#444444">(CeleryExecutor)</text>
+<text x="430.0" y="203.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#444444">extract → score</text>
+<text x="430.0" y="219.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#444444">→ load → notify</text>
+<rect x="350" y="300" width="160" height="56" rx="8" fill="#d5e8d4" stroke="#82b366" stroke-width="1.5"/>
+<text x="430.0" y="320.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1a1a1a">Amazon S3</text>
+<text x="430.0" y="336.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#444444">lots + prédictions</text>
+<rect x="625" y="55" width="215" height="60" rx="8" fill="#dae8fc" stroke="#6c8ebf" stroke-width="1.5"/>
+<text x="732.5" y="77.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1a1a1a">API Modèle (FastAPI)</text>
+<text x="732.5" y="93.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#444444">POST /predict</text>
+<rect x="625" y="175" width="215" height="56" rx="8" fill="#d5e8d4" stroke="#82b366" stroke-width="1.5"/>
+<text x="732.5" y="195.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1a1a1a">PostgreSQL</text>
+<text x="732.5" y="211.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#444444">fraud_predictions</text>
+<rect x="625" y="290" width="215" height="60" rx="8" fill="#fff2cc" stroke="#d6b656" stroke-width="1.5"/>
+<text x="732.5" y="312.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#1a1a1a">Notification SMTP</text>
+<text x="732.5" y="328.0" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#444444">[FRAUD ALERT] / [RAS]</text>
+</svg>
