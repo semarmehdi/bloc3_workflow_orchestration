@@ -270,9 +270,6 @@ DAGs sont prévus pour un déclenchement manuel ou par un trigger externe).
 
 ## 9. Limites connues et évolutions
 
-- Le `MLProject` du dossier `train/` porte encore le nom `attrition_detector`
-  (réutilisé depuis un projet antérieur) ; à renommer en `fraud_detector` pour
-  éviter toute confusion entre les livrables Bloc 3 et Bloc 4.
 - Les deux DAGs sont déclenchés manuellement (`schedule=None`) ; un passage en
   planification récurrente (`schedule_interval`) est immédiat à activer mais
   volontairement laissé en mode démonstration pour ce livrable.
