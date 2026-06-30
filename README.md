@@ -30,10 +30,10 @@ L'arborescence du projet est conçue de manière modulaire pour séparer l'orche
 BLOC3_WORKFLOW_ORCHESTRATION/
 │
 ├── airflow_server/        # Environnement complet
-|   |                        d'orchestration
-|   ├── dags/                 # Pipelines de données
-|   |                        (extraction, transformation,
-|   |                        chargement)
+│   │                        d'orchestration
+│   ├── dags/                 # Pipelines de données
+│   │                        (extraction, transformation,
+│   │                        chargement)
 │   ├── data/                 # Stockage local des données (Bronze, Silver, Gold)
 │   ├── logs/                 # Traces d'exécution pour la supervision
 │   ├── plugins/              # Opérateurs et hooks personnalisés Airflow
