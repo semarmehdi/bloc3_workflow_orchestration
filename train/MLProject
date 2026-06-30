@@ -1,4 +1,4 @@
-name: attrition_detector
+name: fraud_detection
 docker_env:
   # Name of the image we'll be running a container from
   image: mehdisemar2/mlflow3-mehdi # remplacez par votre image !
