@@ -31,35 +31,9 @@ registry (MLflow), service du modèle (FastAPI), qualité et gestion des secrets
 
 ## 2. Architecture
 
-```
-                         +-------------------------------+
-                         |   API de donnees (transactions)|
-                         |   GET /current-transactions    |
-                         +----------------+----------------+
-                                          | 1. extract
-                                          v
-+---------------------------+   +------------------------+
-|  Serveur MLflow Tracking  |   |   extract_raw_transactions_batch|
-|  Backend : Postgres       |   |   -> backup JSON brut sur S3    |
-|  Artifacts : S3           |   +------------------------+
-+-------------+--------------+                | XCom: s3_key
-              ^                                v
-              | register (train.py)   +------------------------+
-              |                        | predict_with_model_fraud|
-   +----------+----------+             | DAG api : appelle l'API |
-   |   train/train.py    |             | DAG pkl : modele local  |
-   |   RandomForest/XGB   |             | (mlflow.sklearn.load)   |
-   |   + SMOTE (imblearn) |             +-----------+------------+
-   +----------------------+                          | XCom: s3_key predictions
-                                          +------------+------------+
-                                          |                         |
-                                          v                         v
-                              +-------------------+      +--------------------+
-                              |   load_branch      |      |   notify_fraud      |
-                              |   create table +    |      |   SMTP (Gmail)      |
-                              |   S3ToPostgresOperator|    |   [FRAUD ALERT]/[RAS]|
-                              +-------------------+      +--------------------+
-```
+![Architecture d'orchestration](docs/diagrams/architecture.svg)
+
+> Source éditable : [`docs/diagrams/architecture.drawio`](docs/diagrams/architecture.drawio) (ouvrir avec [draw.io](https://app.diagrams.net)).
 
 Les deux DAGs partagent la même structure en quatre étapes (extraction, scoring,
 chargement, notification) ; seule la deuxième étape diffère selon que le modèle est
@@ -121,6 +95,10 @@ bloc3_workflow_orchestration/
 
 ## 5. Le pipeline de données (DAGs)
 
+![Graphe de tâches du DAG](docs/diagrams/dag_flow.svg)
+
+> Source éditable : [`docs/diagrams/dag_flow.drawio`](docs/diagrams/dag_flow.drawio).
+
 ### 5.1 Schéma commun aux deux DAGs
 
 1. **`extract_raw_transactions_batch`** — interroge l'API de données
@@ -140,12 +118,12 @@ Les étapes 3 et 4 s'exécutent en parallèle, immédiatement après le scoring.
 
 ### 5.2 Différence entre les deux DAGs
 
-|                              | `etl_fraud_batch_api_dag`                                  | `etl_fraud_batch_pkl_dag`                                                      |
-| ---------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| Scoring                      | Appel HTTP `POST /predict` par transaction                 | `mlflow.sklearn.load_model` puis `predict` local                               |
-| Tâche additionnelle          | —                                                          | `load_model` (téléchargement + pickle du modèle, en parallèle de l'extraction) |
-| Dépendance réseau au scoring | API de serving                                             | Aucune (modèle déjà chargé dans le worker)                                     |
-| Cas d'usage illustré         | Architecture découplée (modèle = microservice indépendant) | Latence réduite, pas de dépendance à la disponibilité d'une API tierce         |
+| | `etl_fraud_batch_api_dag` | `etl_fraud_batch_pkl_dag` |
+| --- | --- | --- |
+| Scoring | Appel HTTP `POST /predict` par transaction | `mlflow.sklearn.load_model` puis `predict` local |
+| Tâche additionnelle | — | `load_model` (téléchargement + pickle du modèle, en parallèle de l'extraction) |
+| Dépendance réseau au scoring | API de serving | Aucune (modèle déjà chargé dans le worker) |
+| Cas d'usage illustré | Architecture découplée (modèle = microservice indépendant) | Latence réduite, pas de dépendance à la disponibilité d'une API tierce |
 
 ### 5.3 L'opérateur custom `S3ToPostgresOperator`
 
@@ -228,25 +206,25 @@ l'UI (Admin → Connections / Variables) ou via la CLI `airflow variables set`.
 
 **Connections**
 
-| Connection ID      | Type                | Contenu                                     |
-| ------------------ | ------------------- | ------------------------------------------- |
-| `aws_default`      | Amazon Web Services | Clé d'accès / secret IAM, région            |
-| `postgres_default` | Postgres            | Hôte, port, base, utilisateur, mot de passe |
+| Connection ID | Type | Contenu |
+| --- | --- | --- |
+| `aws_default` | Amazon Web Services | Clé d'accès / secret IAM, région |
+| `postgres_default` | Postgres | Hôte, port, base, utilisateur, mot de passe |
 
 **Variables**
 
-| Variable                                                          | Rôle                                                     |
-| ----------------------------------------------------------------- | -------------------------------------------------------- |
-| `S3BucketName`                                                    | Bucket S3 utilisé pour les lots bruts et les prédictions |
-| `FRAUD_BASE_URL` / `FRAUD_ENDPOINT`                               | URL de l'API de données                                  |
-| `FRAUD_BATCH_SIZE` / `FRAUD_SLEEP_SECONDS`                        | Taille du lot extrait, pause entre appels                |
-| `FRAUD_S3_PREFIX` / `FRAUD_S3_PRED_PREFIX`                        | Préfixes S3 (lots bruts / prédictions)                   |
-| `FRAUD_MODEL_API_BASE_URL` / `FRAUD_MODEL_API_PREDICT_ENDPOINT`   | URL de l'API modèle (DAG `api` uniquement)               |
-| `FRAUD_MODEL_API_TIMEOUT`                                         | Timeout des appels au modèle                             |
-| `MLFLOW_TRACKING_URI`                                             | URL du serveur MLflow (DAG `pkl` uniquement)             |
-| `REGISTERED_MODEL_NAME` / `ALIAS`                                 | Nom du modèle et alias à charger (DAG `pkl` uniquement)  |
-| `SMTP_SENDER_EMAIL` / `SMTP_APP_PASSWORD` / `SMTP_RECEIVER_EMAIL` | Notification e-mail                                      |
-| `SMTP_HOST` / `SMTP_PORT`                                         | Optionnel, défauts Gmail (`smtp.gmail.com`, `587`)       |
+| Variable | Rôle |
+| --- | --- |
+| `S3BucketName` | Bucket S3 utilisé pour les lots bruts et les prédictions |
+| `FRAUD_BASE_URL` / `FRAUD_ENDPOINT` | URL de l'API de données |
+| `FRAUD_BATCH_SIZE` / `FRAUD_SLEEP_SECONDS` | Taille du lot extrait, pause entre appels |
+| `FRAUD_S3_PREFIX` / `FRAUD_S3_PRED_PREFIX` | Préfixes S3 (lots bruts / prédictions) |
+| `FRAUD_MODEL_API_BASE_URL` / `FRAUD_MODEL_API_PREDICT_ENDPOINT` | URL de l'API modèle (DAG `api` uniquement) |
+| `FRAUD_MODEL_API_TIMEOUT` | Timeout des appels au modèle |
+| `MLFLOW_TRACKING_URI` | URL du serveur MLflow (DAG `pkl` uniquement) |
+| `REGISTERED_MODEL_NAME` / `ALIAS` | Nom du modèle et alias à charger (DAG `pkl` uniquement) |
+| `SMTP_SENDER_EMAIL` / `SMTP_APP_PASSWORD` / `SMTP_RECEIVER_EMAIL` | Notification e-mail |
+| `SMTP_HOST` / `SMTP_PORT` | Optionnel, défauts Gmail (`smtp.gmail.com`, `587`) |
 
 ### 7.3 Déployer le serveur MLflow et entraîner un modèle
 
@@ -292,6 +270,9 @@ DAGs sont prévus pour un déclenchement manuel ou par un trigger externe).
 
 ## 9. Limites connues et évolutions
 
+- Le `MLProject` du dossier `train/` porte encore le nom `attrition_detector`
+  (réutilisé depuis un projet antérieur) ; à renommer en `fraud_detector` pour
+  éviter toute confusion entre les livrables Bloc 3 et Bloc 4.
 - Les deux DAGs sont déclenchés manuellement (`schedule=None`) ; un passage en
   planification récurrente (`schedule_interval`) est immédiat à activer mais
   volontairement laissé en mode démonstration pour ce livrable.
